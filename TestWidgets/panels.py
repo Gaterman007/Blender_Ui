@@ -5,7 +5,7 @@ class WIDGETS_LIB_USER_PT_TestPanel(bpy.types.Panel):
     bl_label = "Widgets Lib Test"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_category = "Tools"
+    bl_category = "Development"
 
     def draw(self, context):
         layout = self.layout

@@ -23,18 +23,25 @@ try:
 except ImportError:
     print(f"Erreur : Impossible de charger '{ADDON_NAME}'. Assurez-vous qu'il est installé et activé.")
 
+
+from widgets_lib.draw_handler import register as register_draw_handler
+from widgets_lib.draw_handler import unregister as unregister_draw_handler
+
+
 # Importer les classes depuis les fichiers séparés
 from .operators import WIDGETS_LIB_USER_OT_TestOperator, WIDGETS_LIB_USER_OT_ShowLabel
 from .panels import WIDGETS_LIB_USER_PT_TestPanel
 
 
 def register():
+    register_draw_handler()  # Appelle la fonction register de widgets_lib.draw_handler
     bpy.utils.register_class(WIDGETS_LIB_USER_OT_TestOperator)
     bpy.utils.register_class(WIDGETS_LIB_USER_OT_ShowLabel)
     bpy.utils.register_class(WIDGETS_LIB_USER_PT_TestPanel)
 
 
 def unregister():
+    unregister_draw_handler()  # Appelle la fonction register de widgets_lib.draw_handler
     bpy.utils.unregister_class(WIDGETS_LIB_USER_OT_TestOperator)
     bpy.utils.unregister_class(WIDGETS_LIB_USER_OT_ShowLabel)
     bpy.utils.unregister_class(WIDGETS_LIB_USER_PT_TestPanel)

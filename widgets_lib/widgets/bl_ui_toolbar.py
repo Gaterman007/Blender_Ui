@@ -100,7 +100,7 @@ class BL_UI_Toolbar(BL_UI_Image):
         self._clicFunct[buttonNo] = funct
         self._FunctData[buttonNo] = data
 
-    def set_colors(self):
+    def get_bg_color(self):
         """
         Définit la couleur d'arrière-plan en fonction de l'état actuel (survol, sélection, normal).
         """
@@ -110,8 +110,8 @@ class BL_UI_Toolbar(BL_UI_Image):
             color = self._hover_bg_color
         else:
             color = self._bg_color
-        self.shader.uniform_float("color", color)
-
+        return color
+        
     def is_in_rect(self, x, y):
         return BL_UI_Widget.is_in_rect(self,x, y)
 

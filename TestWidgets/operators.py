@@ -21,13 +21,15 @@ class WIDGETS_LIB_USER_OT_TestOperator(bpy.types.Operator):
             panel_y = (context.region.height // 2) - (panel_height // 2) + 400
 
             # Créer le panneau draggable
-            toolbar_panneau = widgets_lib.BL_UI_Drag_Panel(panel_x, panel_y, panel_width, panel_height)
+            self.toolbar_panneau = widgets_lib.BL_UI_Drag_Panel(panel_x, panel_y, panel_width, panel_height)
+            self.toolbar_button = widgets_lib.BL_UI_Button(0, 10, panel_height - 4, panel_height - 4)
+            self.button = widgets_lib.BL_UI_Button(panel_x, panel_y - (2 *  panel_height), panel_height, panel_height)
             self.dialog = True
-            toolbar_panneau.bg_color = (0.0, 0.0, 0.0, 0.2)
+            self.toolbar_panneau.bg_color = (0.0, 0.0, 0.0, 0.2)
 
             # Ajouter le panneau au dictionnaire dialogs pour qu'il soit dessiné
-            dialogs["drag_panel"] = toolbar_panneau
-
+            dialogs["drag_panel"] = self.toolbar_panneau
+            dialogs["button_test"] = self.button
             # Vérifier si le gestionnaire de dessin est actif, sinon, l'enregistrer
             if draw_handle_2d is None:
                 bpy.ops.view3d.widget_register_draw_cb()
@@ -35,32 +37,25 @@ class WIDGETS_LIB_USER_OT_TestOperator(bpy.types.Operator):
     def removeDialog(self):
         if self.dialog:
             del dialogs["drag_panel"]
-            toolbar_panneau.eraseChilds()
-            del toolbar_panneau
+            del dialogs["button_test"]
+            self.toolbar_panneau.eraseChilds()
+            self.button.eraseChilds()
+            del self.toolbar_panneau
+            del self.button
             bpy.context.region.tag_redraw()
 
     
     def invoke(self, context, event):
-        print("invoke test operator")
         self.dialog = False
         self.createDialog(context,event)
-        print("invoke dialog created")
+        context.window_manager.modal_handler_add(self)
         return {'RUNNING_MODAL'}
         
     def modal(self, context, event):
         retValue = {'RUNNING_MODAL'}
-        print("modal started")
-
- #       if not self.dialog and not self.toolbar:
- #           if not self.element:
- #               self.loadToolbar(context)
- #           else:
- #               self.loadDialog(context)
- #           return retValue
         
         if event.type in {'ESC'}:  # Permet de quitter avec ESC
             self.removeDialog()
- #           self.removeToolbar()
             return {'CANCELLED'}
 
         if event.type == 'RIGHTMOUSE':
@@ -68,17 +63,15 @@ class WIDGETS_LIB_USER_OT_TestOperator(bpy.types.Operator):
                 self.rightMouseDown = True
             elif self.rightMouseDown and event.value == 'RELEASE':
                 self.removeDialog()
-#                self.removeToolbar()
                 return {'FINISHED'}
         
         retValue = {'PASS_THROUGH'}
-        for widget in dialogs["drag_panel"].values():
+        for widget in dialogs.values():
             retValue, handled = widget.handle_event(context,event)
             if handled:
                 break
         if retValue != {'RUNNING_MODAL'} and retValue != {'PASS_THROUGH'}:
             self.removeDialog()
-#            self.removeToolbar()
             
         return retValue
 

@@ -20,17 +20,17 @@ __description__ = "Une bibliothèque de widgets personnalisés pour Blender"
 # Importation des modules nécessaires
 from .draw_handler import draw2d_cb
 from .widgets import (
-    bl_ui_button,
-    bl_ui_checkbox,
-    bl_ui_drag_panel,
-    bl_ui_dropdown,
-    bl_ui_image,
-    bl_ui_label,
-    bl_ui_slider,
-    bl_ui_textbox,
-    bl_ui_toolbar,
-    bl_ui_up_down,
-    bl_ui_widget,
+    BL_UI_Button,
+    BL_UI_Checkbox,
+    BL_UI_Drag_Panel,
+    BL_UI_DropDown,
+    BL_UI_Image,
+    BL_UI_Label,
+    BL_UI_Slider,
+    BL_UI_Textbox,
+    BL_UI_Toolbar,
+    BL_UI_Up_Down,
+    BL_UI_Widget,
 )
 
 from .widgets.Icons import (

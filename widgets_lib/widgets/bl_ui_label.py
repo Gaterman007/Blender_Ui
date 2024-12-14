@@ -201,8 +201,8 @@ class BL_UI_Label(BL_UI_Widget):
         
         boxsaved = scissor_get()
        # Définir la zone de clipping
-        scissor_set(boxleft, boxtop, self.width, self.height)
-
+        scissor_set(left, int(inverted_y), self.width, self.height)
+        gpu.state.scissor_test_set(True)
         blf.position(self.font_id, left, inverted_y, 0)
 
         blf.color(self.font_id, r, g, b, a)

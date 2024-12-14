@@ -249,6 +249,9 @@ class BL_UI_Widget:
             bpy.context.region.tag_redraw()
         self._bg_color = value
 
+    def get_bg_color(self):
+        return self._bg_color
+
     @property
     def visible(self):
         retValue = self._is_visible
@@ -297,7 +300,6 @@ class BL_UI_Widget:
         # Combiner les deux matrices : d'abord translation, puis inversion
         return flip_y_matrix @ translate_matrix
 
-
     def drawStartShader(self, shader, context):
         shader.bind()
         view_matrix = get_model_view_matrix()
@@ -314,15 +316,15 @@ class BL_UI_Widget:
     
     
     def drawBackground(self,context):
-        self.drawStartShader(self._shaderBackground,context)
-        self._shaderBackground.uniform_float("color", self._bg_color)
+        self._shaderBackground.uniform_float("color", self.get_bg_color())
         self.batch_panel.draw(self._shaderBackground)
-        self.drawEndShader(self._shaderBackground,context)
             
     def draw(self, context):
         if not self._is_visible:
             return
+        self.drawStartShader(self._shaderBackground,context)
         self.drawBackground(context)
+        self.drawEndShader(self._shaderBackground,context)
         for widget in self.childs:
             widget.draw(context)   
 

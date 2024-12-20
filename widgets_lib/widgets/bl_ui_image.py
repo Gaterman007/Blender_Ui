@@ -10,7 +10,7 @@ from .Icons.Texture import Textures
 class BL_UI_Image(BL_UI_Widget):
 
     # Ajouter 'widgets\SVG_Files' au répertoire parent
-    svg_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'widgets', 'SVG_Files')
+    svg_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'SVG_Files')
 
     def __init__(self, *args , **kwargs):
 #         x, y, width = 80, height = 40, color = (0.0,0.0,0.0,0.0)

@@ -33,19 +33,31 @@ from .operators import WIDGETS_LIB_USER_OT_TestOperator, WIDGETS_LIB_USER_OT_Sho
 from .panels import WIDGETS_LIB_USER_PT_TestPanel
 
 
+def menu_func_add(self, context):
+    self.layout.operator(
+        "wm.widgets_lib_test",  # Remplacez par l'ID de votre opérateur
+        text="CNC Toolbar",  # Le texte visible dans le menu
+        icon='MESH_CUBE'  # Icône de l'élément
+    )
+
 def register():
     register_draw_handler()  # Appelle la fonction register de widgets_lib.draw_handler
     bpy.utils.register_class(WIDGETS_LIB_USER_OT_TestOperator)
     bpy.utils.register_class(WIDGETS_LIB_USER_OT_ShowLabel)
     bpy.utils.register_class(WIDGETS_LIB_USER_PT_TestPanel)
 
-
+    # Enregistrer l'ajout au menu
+    bpy.types.VIEW3D_MT_add.append(menu_func_add)
+    
 def unregister():
     unregister_draw_handler()  # Appelle la fonction register de widgets_lib.draw_handler
     bpy.utils.unregister_class(WIDGETS_LIB_USER_OT_TestOperator)
     bpy.utils.unregister_class(WIDGETS_LIB_USER_OT_ShowLabel)
     bpy.utils.unregister_class(WIDGETS_LIB_USER_PT_TestPanel)
 
-
+    # Supprimer l'ajout au menu
+    bpy.types.VIEW3D_MT_add.remove(menu_func_add)
+    
 if __name__ == "__main__":
     register()
+

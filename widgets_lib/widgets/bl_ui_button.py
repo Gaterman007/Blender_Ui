@@ -1,9 +1,13 @@
 import bpy
 import gpu
+import os
 
 from .bl_ui_widget import BL_UI_Widget
+from .bl_ui_image import BL_UI_Image
 from .bl_ui_label import BL_UI_Label
-
+from gpu_extras.batch import batch_for_shader
+from .Icons.SVG_Icon import SVG_Icon, get_SVG_Icon
+from .Icons.Texture import Textures
 
 class BL_UI_Button(BL_UI_Label):
     STATE_NORMAL = 0
@@ -14,6 +18,14 @@ class BL_UI_Button(BL_UI_Label):
         """
         Initialisation du bouton avec position, dimensions et texte.
         """
+        self.texture = None
+        self.__image_size = None
+        
+        self.cropTop = 0.0;
+        self.cropBottom = 1.0;
+        self.cropLeft = 0.0;
+        self.cropRight = 1.0;
+
         super().__init__( *args , **kwargs)
         self._text = kwargs.get("text", args[4] if len(args) > 4 else "button")
         self.className = "Button"
@@ -25,7 +37,6 @@ class BL_UI_Button(BL_UI_Label):
         self.__opClass = None  # Classe d'opérateur pour l'appel dynamique
         self.index = None  # Paramètre d'index pour l'opérateur
         self.type = None  # Paramètre de type pour l'opérateur
-
 
         self._clicFunct = None  # Fonction callback pour clic
         self._FunctData = None  # Données pour la fonction callback        
@@ -57,6 +68,92 @@ class BL_UI_Button(BL_UI_Label):
             bpy.context.region.tag_redraw()  # Redessiner la région
         self._select_bg_color = value
 
+    def set_image(self, rel_filename):
+        svg_filename = rel_filename
+        svg_filename += '.svg'
+        print(BL_UI_Image.svg_path)
+        print(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),"\\SVG_Files")
+        svg_filepath = os.path.join(BL_UI_Image.svg_path, rel_filename + '.svg')
+        png_filepath = os.path.join(BL_UI_Image.svg_path, rel_filename + '.png')
+        print(svg_filepath)
+        fileExist = os.path.exists(svg_filepath)
+        if fileExist:    # fichier svg exist
+            if self.texture is not None:
+                self.texture = None
+            self.texture = Textures(self.width, self.height)
+            self.texture.load_SVG(svg_filepath)
+            # cree l image a partir du fichier svg
+        else:
+            fileExist = os.path.exists(os.path.join(BL_UI_Image.svg_path, rel_filename + '.png'))
+            if fileExist:    # fichier png exist
+                if self.texture is not None:
+                    self.texture = None
+                self.texture = Textures(self.width, self.height)
+                self.texture.load_PNG(png_filepath)
+            else:
+                if self.texture is not None:
+                    self.texture = None
+
+    def set_crop(self,top,bottom,left,right):
+        self.cropTop = top;
+        self.cropBottom = bottom;
+        self.cropLeft = left;
+        self.cropRight = right;
+        self.batch()
+
+    def batch(self):     
+        super().batch()
+        off_x = 2
+        off_y = 2
+        if self.__image_size is None:
+            self.__image_size = (self.width, self.height)
+        sx, sy = self.__image_size
+
+        if bpy.app.version < (4, 0, 0):
+            # Utilise un shader pour les textures 2D
+            self.shader_img = gpu.shader.from_builtin("2D_IMAGE")
+        else:
+            self.shader_img = gpu.shader.from_builtin("IMAGE")
+
+        # Définition des vertices pour un rectangle (4 points pour afficher l'image)
+        self.vertices = [
+            ( 0 + off_x,  0 + off_y),  # coin inférieur gauche
+            (sx - off_x,  0 + off_y),  # coin inférieur droit
+            (sx - off_x, sy - off_y),  # coin supérieur droit
+            ( 0 + off_x, sy - off_y),  # coin supérieur gauche
+        ]
+
+        # Définition des coordonnées UV pour l'image (mapping de la texture)
+        self.uv_coords = [
+            (self.cropLeft, self.cropTop),  # Coin inférieur gauche
+            (self.cropRight, self.cropTop),  # Coin inférieur droit
+            (self.cropRight, self.cropBottom),  # Coin supérieur droit
+            (self.cropLeft, self.cropBottom),  # Coin supérieur gauche
+        ]
+
+        # Indices des sommets pour former le rectangle
+        self.indices = [(0, 1, 2), (2, 3, 0)]
+
+        # Création du batch pour le dessin du rectangle avec texture
+        self.batch_image = batch_for_shader(
+            self.shader_img, 'TRIS', {"pos": self.vertices, "texCoord": self.uv_coords}, indices=self.indices
+        )
+
+    def draw(self,context):
+        if not self._is_visible:
+            return
+
+        if self.texture is not None:
+            BL_UI_Widget.draw(self,context)
+            # draw image
+            gpu.state.blend_set("ALPHA")
+            self.drawStartShader(self.shader_img,context)
+            self.texture.draw_texture(self.shader_img)
+            self.batch_image.draw(self.shader_img) 
+            self.drawEndShader(self.shader_img,context) 
+            gpu.state.blend_set("NONE")
+        else:
+            super().draw(context)
 
     def setOpClass(self, opClass, index, type):
         """

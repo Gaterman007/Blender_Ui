@@ -23,13 +23,16 @@ class WIDGETS_LIB_USER_OT_TestOperator(bpy.types.Operator):
             # Créer le panneau draggable
             self.toolbar_panneau = widgets_lib.BL_UI_Drag_Panel(panel_x, panel_y, panel_width, panel_height)
             self.toolbar_button = widgets_lib.BL_UI_Button(0, 10, panel_height - 4, panel_height - 4)
-            self.button = widgets_lib.BL_UI_Button(panel_x, panel_y - (2 *  panel_height), panel_height, panel_height)
+#            self.button = widgets_lib.BL_UI_Button(panel_x, panel_y - (2 *  panel_height), panel_height, panel_height)
+            self.button = widgets_lib.BL_UI_Button(0, 0, panel_height, panel_height)
+            self.button.set_image("action")
             self.dialog = True
             self.toolbar_panneau.bg_color = (0.0, 0.0, 0.0, 0.2)
 
             # Ajouter le panneau au dictionnaire dialogs pour qu'il soit dessiné
+            self.toolbar_panneau.add_widget(self.button)
             dialogs["drag_panel"] = self.toolbar_panneau
-            dialogs["button_test"] = self.button
+#            dialogs["button_test"] = self.button
             # Vérifier si le gestionnaire de dessin est actif, sinon, l'enregistrer
             if draw_handle_2d is None:
                 bpy.ops.view3d.widget_register_draw_cb()
@@ -37,11 +40,11 @@ class WIDGETS_LIB_USER_OT_TestOperator(bpy.types.Operator):
     def removeDialog(self):
         if self.dialog:
             del dialogs["drag_panel"]
-            del dialogs["button_test"]
+#            del dialogs["button_test"]
             self.toolbar_panneau.eraseChilds()
-            self.button.eraseChilds()
+#            self.button.eraseChilds()
             del self.toolbar_panneau
-            del self.button
+#            del self.button
             bpy.context.region.tag_redraw()
 
     

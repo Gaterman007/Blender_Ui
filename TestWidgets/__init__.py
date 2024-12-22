@@ -29,8 +29,24 @@ from widgets_lib.draw_handler import unregister as unregister_draw_handler
 
 
 # Importer les classes depuis les fichiers séparés
-from .operators import WIDGETS_LIB_USER_OT_TestOperator, WIDGETS_LIB_USER_OT_ShowLabel
+from .operators import (
+    WIDGETS_LIB_USER_OT_TestOperator,
+    CNCDataPropertyGroup,
+    CNCPathProperty,
+    CNCPlungePropertyGroup,
+    CNCPocketPropertyGroup,
+    CNCStraitCutPropertyGroup
+)
 from .panels import WIDGETS_LIB_USER_PT_TestPanel
+
+
+classes = [
+    CNCDataPropertyGroup,
+    CNCPlungePropertyGroup,
+    CNCPathProperty,
+    CNCPocketPropertyGroup,
+    CNCStraitCutPropertyGroup
+]
 
 
 def menu_func_add(self, context):
@@ -42,8 +58,12 @@ def menu_func_add(self, context):
 
 def register():
     register_draw_handler()  # Appelle la fonction register de widgets_lib.draw_handler
+    
+    # Define a property group for storing CNC data
+    for cls in classes:
+        bpy.utils.register_class(cls)
+    
     bpy.utils.register_class(WIDGETS_LIB_USER_OT_TestOperator)
-    bpy.utils.register_class(WIDGETS_LIB_USER_OT_ShowLabel)
     bpy.utils.register_class(WIDGETS_LIB_USER_PT_TestPanel)
 
     # Enregistrer l'ajout au menu
@@ -51,13 +71,16 @@ def register():
     
 def unregister():
     unregister_draw_handler()  # Appelle la fonction register de widgets_lib.draw_handler
-    bpy.utils.unregister_class(WIDGETS_LIB_USER_OT_TestOperator)
-    bpy.utils.unregister_class(WIDGETS_LIB_USER_OT_ShowLabel)
     bpy.utils.unregister_class(WIDGETS_LIB_USER_PT_TestPanel)
+    bpy.utils.unregister_class(WIDGETS_LIB_USER_OT_TestOperator)
+
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
+    
 
     # Supprimer l'ajout au menu
     bpy.types.VIEW3D_MT_add.remove(menu_func_add)
+
     
 if __name__ == "__main__":
     register()
-

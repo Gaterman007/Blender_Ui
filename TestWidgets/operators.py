@@ -5,9 +5,9 @@ from widgets_lib.draw_handler import dialogs
 from widgets_lib.draw_handler import draw_handle_2d
 
 # Exemple d'opérateur
-class WIDGETS_LIB_USER_OT_TestOperator(bpy.types.Operator):
-    bl_idname = "wm.widgets_lib_test"
-    bl_label = "Test Widgets Lib Panel"
+class CNCTOOLBAR_OT_Operator(bpy.types.Operator):
+    bl_idname = "wm.cnc_main_toolbar"
+    bl_label = "CNC Widgets Toolbar"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "Development"
@@ -22,10 +22,9 @@ class WIDGETS_LIB_USER_OT_TestOperator(bpy.types.Operator):
 
             # Créer le panneau draggable
             self.toolbar_panneau = widgets_lib.BL_UI_Drag_Panel(panel_x, panel_y, panel_width, panel_height)
-            self.selectButton = widgets_lib.BL_UI_Button(panel_height * 0, 0, panel_height - 4, panel_height - 4)
-            self.button       = widgets_lib.BL_UI_Button(panel_height * 1, 0, panel_height - 4, panel_height - 4)
-            self.selectButton.set_image("greasepencil")
-            self.button.set_image("action")
+            self.selectButton = widgets_lib.BL_UI_Button(panel_height * 0, 0, panel_height - 4, panel_height - 4, image = "greasepencil")
+            self.button       = widgets_lib.BL_UI_Button(panel_height * 1, 0, panel_height - 4, panel_height - 4, image = "action")
+
             self.dialog = True
             self.toolbar_panneau.bg_color = (0.0, 0.0, 0.0, 0.2)
 
@@ -78,140 +77,6 @@ class WIDGETS_LIB_USER_OT_TestOperator(bpy.types.Operator):
             self.removeDialog()
             
         return retValue
-
-
-# Define a property group for storing CNC data  PathObj
-class CNCDataPropertyGroup(bpy.types.PropertyGroup):
-    drillBitName: bpy.props.StringProperty(
-        name="Drill Bit Name",
-        description="Name of the drill bit"
-    )
-    drillBitUnits: bpy.props.EnumProperty(
-        name="Units",
-        description="Units of measurement for the drill bit",
-        items=[
-            ('MM', "Millimeters", "Use millimeters"),
-            ('INCH', "Inches", "Use inches")
-        ],
-        default='MM'
-    )
-    methodType: bpy.props.StringProperty(
-        name="Method Type",
-        description="Type of machining method (e.g., plunge, pocket)"
-    )
-    depth: bpy.props.FloatProperty(
-        name="Depth",
-        description="Depth of cut",
-        default=10.0,
-        unit='LENGTH'
-    )
-    feedrate: bpy.props.FloatProperty(
-        name="Feed Rate",
-        description="Feed rate of the tool",
-        default=1.0,
-        unit='VELOCITY'
-    )
-    multipass: bpy.props.BoolProperty(
-        name="Multi-pass",
-        description="Whether to use multiple passes for cutting",
-        default=False
-    )
-    depthStep: bpy.props.FloatProperty(
-        name="Depth Step",
-        description="Depth step per pass",
-        default=2.0,
-        unit='LENGTH'
-    )
-    overlapPercent: bpy.props.FloatProperty(
-        name="Overlap Percentage",
-        description="Percentage of overlap between passes",
-        default=50.0,
-        subtype='PERCENTAGE'
-    )
-
-# Spécialisation pour les outils de type Plunge
-class CNCPlungePropertyGroup(CNCDataPropertyGroup):
-    plunge_method: bpy.props.EnumProperty(
-        name="Plunge Method",
-        description="Type of plunge method",
-        items=[
-            ('DOWN', "Down", "Plunge straight down"),
-            ('STEP', "Step", "Step plunge"),
-            ('SPIRAL', "Spiral", "Spiral plunge")
-        ],
-        default='DOWN'
-    )
-    spiral_overlap: bpy.props.FloatProperty(
-        name="Spiral Overlap",
-        description="Overlap percentage for spiral plunge",
-        default=50.0,
-        subtype='PERCENTAGE'
-    )
-    hole_size: bpy.props.FloatProperty(
-        name="Hole Size",
-        description="Size of the hole",
-        default=10.0,
-        unit='LENGTH'
-    )
-
-class CNCPathProperty(CNCDataPropertyGroup):
-    start_point: bpy.props.FloatVectorProperty(
-        name="Start Point",
-        description="Starting point of the toolpath",
-        subtype='XYZ',
-        default=(0.0, 0.0, 0.0)
-    )
-    end_point: bpy.props.FloatVectorProperty(
-        name="End Point",
-        description="End point of the toolpath",
-        subtype='XYZ',
-        default=(1.0, 1.0, 1.0)
-    )
-
-# Spécialisation pour les outils de type Pocket
-class CNCPocketPropertyGroup(CNCDataPropertyGroup):
-    pocket_method: bpy.props.EnumProperty(
-        name="Pocket Method",
-        description="Type of pocketing",
-        items=[
-            ('CENTER', "Center", "Pocket from the center out"),
-            ('INTERIOR', "Interior", "Interior pocketing"),
-            ('EXTERIOR', "Exterior", "Exterior pocketing")
-        ],
-        default='CENTER'
-    )
-    spiral_step: bpy.props.FloatProperty(
-        name="Spiral Step",
-        description="Step size for spiral pocketing",
-        default=1.0,
-        unit='LENGTH'
-    )
-    hole_size: bpy.props.FloatProperty(
-        name="Hole Size",
-        description="Size of the pocket or hole",
-        default=10.0,
-        unit='LENGTH'
-    )
-
-# Spécialisation pour les outils de type Straight Cut
-class CNCStraitCutPropertyGroup(CNCDataPropertyGroup):
-    cut_method: bpy.props.EnumProperty(
-        name="Cut Method",
-        description="Type of straight cut",
-        items=[
-            ('RAMP', "Ramp", "Ramp cutting"),
-            ('MULTIPASS', "Multi-pass", "Multi-pass cutting"),
-            ('PLUNGE', "Plunge", "Plunge cutting")
-        ],
-        default='RAMP'
-    )
-    cut_width: bpy.props.FloatProperty(
-        name="Cut Width",
-        description="Width of the cut",
-        default=5.0,
-        unit='LENGTH'
-    )
-
 
 class WIDGETS_LIB_USER_OT_ShowLabel(bpy.types.Operator):
     bl_idname = "wm.widgets_lib_show_label"

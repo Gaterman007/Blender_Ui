@@ -109,11 +109,11 @@ class BL_UI_Checkbox(BL_UI_Label):
         if self.is_in_rect(x,y):
             return ({"RUNNING_MODAL"},True)
 
-        return ({"RUNNING_MODAL"},False)
+        return ({"PASS_THROUGH"},False)
 
     def mouse_up(self, x, y, context):
         if self.is_in_rect(x,y):
             self.toggle_state(context)
             return ({"RUNNING_MODAL"},True)
 
-        return ({"RUNNING_MODAL"},False)
+        return ({"PASS_THROUGH"},False)

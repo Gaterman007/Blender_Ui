@@ -180,7 +180,7 @@ class BL_UI_Textbox(BL_UI_Label):
             self.drag = False
             return ({"RUNNING_MODAL"},True)
         else:
-            return ({"RUNNING_MODAL"},False)
+            return ({"PASS_THROUGH"},False)
 
     def mouse_move(self, x, y, context):
         if self.mousePressed:
@@ -201,7 +201,7 @@ class BL_UI_Textbox(BL_UI_Label):
                             self.saveData = self.attribut
                             self.drag = True
                 return ({"RUNNING_MODAL"},True)
-        return ({"RUNNING_MODAL"},False)
+        return ({"PASS_THROUGH"},False)
 
     def mouse_up(self, x, y, context):
         if self.drag:
@@ -217,7 +217,7 @@ class BL_UI_Textbox(BL_UI_Label):
                     self.startCaretTime()
                 self.setCaretPos(x,y)
                 return ({"RUNNING_MODAL"},True)
-        return ({"RUNNING_MODAL"},False)
+        return ({"PASS_THROUGH"},False)
 
     def setCaretPos(self,x,y):
         new_carretPos = 0

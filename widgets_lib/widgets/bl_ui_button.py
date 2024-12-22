@@ -28,6 +28,9 @@ class BL_UI_Button(BL_UI_Label):
 
         super().__init__( *args , **kwargs)
         self._text = kwargs.get("text", args[4] if len(args) > 4 else "button")
+        imagename = kwargs.get("image", None)
+        if imagename is not None:
+            self.set_image(imagename)
         self.className = "Button"
         self._text_color = (1.0, 1.0, 1.0, 1.0)  # Couleur du texte
         self._hover_bg_color = (0.5, 0.5, 0.5, 1.0)  # Couleur arrière-plan au survol
@@ -199,7 +202,7 @@ class BL_UI_Button(BL_UI_Label):
         if self.is_in_rect(x, y):
             self._setState(self.STATE_PRESSED)
             return {"RUNNING_MODAL"}, True
-        return {"RUNNING_MODAL"}, False
+        return {"PASS_THROUGH"}, False
 
     def mouse_move(self, x, y, context):
         """
@@ -212,7 +215,7 @@ class BL_UI_Button(BL_UI_Label):
                 self._setState(self.STATE_HOVER)
         else:
             self._setState(self.STATE_NORMAL)
-        return {"RUNNING_MODAL"}, False
+        return {"PASS_THROUGH"}, False
 
     def mouse_up(self, x, y, context):
         """
@@ -220,7 +223,7 @@ class BL_UI_Button(BL_UI_Label):
         :param x: Position x de la souris.
         :param y: Position y de la souris.
         """
-        result = ({"RUNNING_MODAL"},False)
+        result = ({"PASS_THROUGH"},False)
         if self.is_in_rect(x, y) and self.__state == self.STATE_PRESSED:
             if self.__opClass is not None:
                 family, operator = self.__opClass.split(".")

@@ -1,6 +1,6 @@
 bl_info = {
-    "name": "Widgets Lib Test",
-    "description": "Un exemple de Addon utilisant Widgets Lib",
+    "name": "CNC data with Widgets Test",
+    "description": "Addon pour CNC utilisant Widgets Lib",
     "author": "Gaétan Noiseux",
     "version": (1, 0, 0),
     "blender": (2, 93, 0),
@@ -27,17 +27,15 @@ except ImportError:
 from widgets_lib.draw_handler import register as register_draw_handler
 from widgets_lib.draw_handler import unregister as unregister_draw_handler
 
-
 # Importer les classes depuis les fichiers séparés
-from .operators import (
-    WIDGETS_LIB_USER_OT_TestOperator,
-    CNCDataPropertyGroup,
-    CNCPathProperty,
-    CNCPlungePropertyGroup,
-    CNCPocketPropertyGroup,
-    CNCStraitCutPropertyGroup
-)
+from .operators import CNCTOOLBAR_OT_Operator
 from .panels import WIDGETS_LIB_USER_PT_TestPanel
+
+from .CNC_Data.CNCDataPropertyGroup import CNCDataPropertyGroup
+from .CNC_Data.CNC_Path import CNCPathProperty
+from .CNC_Data.CNC_Plunge import CNCPlungePropertyGroup
+from .CNC_Data.CNC_Pocket import CNCPocketPropertyGroup
+from .CNC_Data.CNC_StraitCut import CNCStraitCutPropertyGroup
 
 
 classes = [
@@ -63,7 +61,7 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
     
-    bpy.utils.register_class(WIDGETS_LIB_USER_OT_TestOperator)
+    bpy.utils.register_class(CNCTOOLBAR_OT_Operator)
     bpy.utils.register_class(WIDGETS_LIB_USER_PT_TestPanel)
 
     # Enregistrer l'ajout au menu
@@ -72,7 +70,7 @@ def register():
 def unregister():
     unregister_draw_handler()  # Appelle la fonction register de widgets_lib.draw_handler
     bpy.utils.unregister_class(WIDGETS_LIB_USER_PT_TestPanel)
-    bpy.utils.unregister_class(WIDGETS_LIB_USER_OT_TestOperator)
+    bpy.utils.unregister_class(CNCTOOLBAR_OT_Operator)
 
     for cls in classes:
         bpy.utils.unregister_class(cls)

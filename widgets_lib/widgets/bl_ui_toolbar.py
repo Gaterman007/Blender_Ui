@@ -160,7 +160,7 @@ class BL_UI_Toolbar(BL_UI_Image):
                 self._setState(self.STATE_HOVER)
         else:
             self._setState(self.STATE_NORMAL)
-        return {"RUNNING_MODAL"}, False
+        return {"PASS_THROUGH"}, False
 
     def mouse_up(self, x, y, context):
         """

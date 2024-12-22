@@ -75,7 +75,7 @@ class BL_UI_DropDown(BL_UI_Label):
             self.__state = 1
             return ({"RUNNING_MODAL"},True)
 
-        return ({"RUNNING_MODAL"},False)
+        return ({"PASS_THROUGH"},False)
 
     def mouse_move(self, x, y, context):
         if self.is_in_rect(x, y):
@@ -84,7 +84,7 @@ class BL_UI_DropDown(BL_UI_Label):
                 self.__state = 2
         else:
             self.__state = 0
-        return ({"RUNNING_MODAL"},False)
+        return ({"PASS_THROUGH"},False)
 
     def showDropDown(self,show = True):
         if self.newbuttons is not None:
@@ -94,12 +94,13 @@ class BL_UI_DropDown(BL_UI_Label):
         
 
     def mouse_up(self, x, y, context):
-        result = ({"RUNNING_MODAL"},False)
+        result = ({"PASS_THROUGH"},False)
         if self.is_in_rect(x, y):
             if self.__state == 1:
                 # call drop down
                 self.showDropDown(True)
             self.__state = 2
+            return ({"RUNNING_MODAL"},True)
         else:
             self.__state = 0
         return result

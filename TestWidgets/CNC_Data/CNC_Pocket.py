@@ -3,9 +3,10 @@ from .CNCDataPropertyGroup import CNCDataPropertyGroup
 
 # Spécialisation pour les outils de type Pocket
 class CNCPocketPropertyGroup(CNCDataPropertyGroup):
-    pocket_method: bpy.props.EnumProperty(
+    # Redefine methodType in the derived class
+    methodType: bpy.props.EnumProperty(
         name="Pocket Method",
-        description="Type of pocketing",
+        description="Type of Pocket method",
         items=[
             ('CENTER', "Center", "Pocket from the center out"),
             ('INTERIOR', "Interior", "Interior pocketing"),

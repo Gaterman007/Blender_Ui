@@ -3,7 +3,8 @@ from .CNCDataPropertyGroup import CNCDataPropertyGroup
 
 # Spécialisation pour les outils de type Plunge
 class CNCPlungePropertyGroup(CNCDataPropertyGroup):
-    plunge_method: bpy.props.EnumProperty(
+    # Redefine methodType in the derived class
+    methodType: bpy.props.EnumProperty(
         name="Plunge Method",
         description="Type of plunge method",
         items=[
@@ -25,3 +26,10 @@ class CNCPlungePropertyGroup(CNCDataPropertyGroup):
         default=10.0,
         unit='LENGTH'
     )
+    location: bpy.props.FloatVectorProperty(
+        name="Location",
+        description="Position 3D du plunge",
+        default=(0.0, 0.0, 0.0),
+        subtype='XYZ'
+    )    
+    

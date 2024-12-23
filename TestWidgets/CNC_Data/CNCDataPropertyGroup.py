@@ -15,9 +15,15 @@ class CNCDataPropertyGroup(bpy.types.PropertyGroup):
         ],
         default='MM'
     )
-    methodType: bpy.props.StringProperty(
+    methodType: bpy.props.EnumProperty(
         name="Method Type",
-        description="Type of machining method (e.g., plunge, pocket)"
+        description="Type of machining method (e.g., plunge, pocket)",
+        items=[
+            ('PLUNGE', "Plunge", "Plunge machining method"),
+            ('POCKET', "Pocket", "Pocket machining method"),
+            # Add other methods if needed
+        ],
+        default='PLUNGE'
     )
     depth: bpy.props.FloatProperty(
         name="Depth",

@@ -3,8 +3,9 @@ from .CNCDataPropertyGroup import CNCDataPropertyGroup
 
 # Spécialisation pour les outils de type Straight Cut
 class CNCStraitCutPropertyGroup(CNCDataPropertyGroup):
-    cut_method: bpy.props.EnumProperty(
-        name="Cut Method",
+    # Redefine methodType in the derived class
+    methodType: bpy.props.EnumProperty(
+        name="Strait Cut Method",
         description="Type of straight cut",
         items=[
             ('RAMP', "Ramp", "Ramp cutting"),

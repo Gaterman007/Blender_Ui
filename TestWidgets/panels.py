@@ -9,4 +9,5 @@ class WIDGETS_LIB_USER_PT_TestPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("wm.cnc_main_toolbar", text="CNC ToolBar")
+        layout.operator("cnc_tools.main_toolbar", text="CNC ToolBar")
+        layout.operator("cnc_tools.cnc_add_plunge", text="CNC Plunge")

@@ -74,11 +74,11 @@ class BL_UI_Button(BL_UI_Label):
     def set_image(self, rel_filename):
         svg_filename = rel_filename
         svg_filename += '.svg'
-        print(BL_UI_Image.svg_path)
-        print(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),"\\SVG_Files")
+#        print(BL_UI_Image.svg_path)
+#        print(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),"\\SVG_Files")
         svg_filepath = os.path.join(BL_UI_Image.svg_path, rel_filename + '.svg')
         png_filepath = os.path.join(BL_UI_Image.svg_path, rel_filename + '.png')
-        print(svg_filepath)
+#        print(svg_filepath)
         fileExist = os.path.exists(svg_filepath)
         if fileExist:    # fichier svg exist
             if self.texture is not None:
@@ -238,7 +238,17 @@ class BL_UI_Button(BL_UI_Label):
                     print(f"Erreur d'appel d'opérateur: {e}")                    
             else:
                 if self._clicFunct is not None:
-                    result = self._clicFunct(self._FunctData,context)
+                    if isinstance(self._clicFunct, str):  # Si c'est un nom d'opérateur
+                        family, operator = self._clicFunct.split(".")
+                        print(family,operator)
+                        print(getattr(bpy.ops, family))
+                        print(getattr(getattr(bpy.ops, family), operator))
+                        resultOps = getattr(getattr(bpy.ops, family), operator)(self._FunctData)
+                        print(resultOps)
+                        result = (resultOps,True)
+                    else:
+                        # Sinon, appeler la fonction Python avec les arguments
+                        result = self._clicFunct(context,self._FunctData)
             self._setState(self.STATE_HOVER)
         else:
             self._setState(self.STATE_NORMAL)
